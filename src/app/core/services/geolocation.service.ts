@@ -22,11 +22,23 @@ export class GeolocationService {
           });
         },
         (error) => {
-          reject(error);
+          let message = 'Error desconocido';
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              message = 'Permiso de ubicación denegado';
+              break;
+            case error.POSITION_UNAVAILABLE:
+              message = 'Ubicación no disponible';
+              break;
+            case error.TIMEOUT:
+              message = 'Tiempo de espera agotado';
+              break;
+          }
+          reject(new Error(message));
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
+          timeout: 15000,
           maximumAge: 0,
         },
       );
