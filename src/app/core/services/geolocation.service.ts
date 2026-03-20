@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { IpLocationService } from './ip-location.service';
 
 interface GeoPosition {
   lat: number;
@@ -7,10 +8,12 @@ interface GeoPosition {
 
 @Injectable({ providedIn: 'root' })
 export class GeolocationService {
+  private ipLocationService = inject(IpLocationService);
+
   async getCurrentPosition(): Promise<GeoPosition> {
     return new Promise((resolve, reject) => {
       if (!('geolocation' in navigator)) {
-        reject(new Error('Geolocation not supported'));
+        this.tryIpFallback(resolve, reject);
         return;
       }
 
@@ -22,26 +25,21 @@ export class GeolocationService {
           });
         },
         (error) => {
-          let message = 'Error desconocido';
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              message = 'Permiso de ubicación denegado';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              message = 'Ubicación no disponible';
-              break;
-            case error.TIMEOUT:
-              message = 'Tiempo de espera agotado';
-              break;
-          }
-          reject(new Error(message));
+          this.tryIpFallback(resolve, reject);
         },
         {
           enableHighAccuracy: true,
-          timeout: 15000,
+          timeout: 10000,
           maximumAge: 0,
         },
       );
     });
+  }
+
+  private tryIpFallback(
+    resolve: (value: GeoPosition) => void,
+    reject: (reason?: any) => void,
+  ): void {
+    this.ipLocationService.getLocation().then(resolve).catch(reject);
   }
 }
