@@ -1,45 +1,344 @@
-.auth-container {
+.auth-wrapper {
+  display: flex;
   min-height: 100vh;
+}
+
+.auth-side {
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-color) 0%, #4338ca 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: pulse-bg 8s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    right: -30%;
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+  }
 }
 
-.auth-card {
+.brand-section {
+  position: relative;
+  z-index: 1;
+  color: black;
+  text-align: center;
+  max-width: 400px;
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    animation: float 3s ease-in-out infinite;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.5px;
+  }
+
+  > p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0 0 3rem;
+    line-height: 1.6;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 1.5rem 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+      }
+
+      .number {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .label {
+        font-size: 0.85rem;
+        opacity: 0.85;
+      }
+    }
+  }
+}
+
+.auth-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: #fafbfc;
+}
+
+.form-container {
   width: 100%;
   max-width: 400px;
 }
 
-.form-field {
-  margin-bottom: 1rem;
+.form-header {
+  margin-bottom: 2rem;
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.5rem;
   }
 
-  input,
-  :host ::ng-deep .p-inputtext {
+  p {
+    color: var(--text-color-secondary);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  animation: shake 0.5s ease-in-out;
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+
+    i {
+      font-size: 0.9rem;
+      color: var(--primary-color);
+    }
+  }
+
+  input {
     width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    &.ng-invalid.ng-touched {
+      border-color: #ef4444;
+    }
   }
 
   :host ::ng-deep .p-password {
     width: 100%;
+
+    input {
+      width: 100%;
+    }
   }
+
+  .error-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+  }
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 
 .auth-footer {
-  margin-top: 1rem;
+  margin-top: 2rem;
   text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
 
-  a {
-    font-weight: 500;
-    margin-left: 0.25rem;
+  span {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.35rem;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 0.85rem;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      color: #4338ca;
+
+      i {
+        transform: scaleX(-1);
+      }
+    }
   }
 }
 
-:host ::ng-deep .w-full {
-  width: 100%;
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-bg {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@media (max-width: 900px) {
+  .auth-wrapper {
+    flex-direction: column;
+  }
+
+  .auth-side {
+    padding: 2rem;
+
+    .brand-section {
+      .logo {
+        width: 64px;
+        height: 64px;
+
+        svg {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      > p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+
+        .stat {
+          padding: 1rem;
+
+          .number {
+            font-size: 1.5rem;
+          }
+        }
+      }
+    }
+  }
+
+  .auth-form-side {
+    padding: 2rem 1.5rem;
+  }
 }

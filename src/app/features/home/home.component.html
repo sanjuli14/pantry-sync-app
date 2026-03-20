@@ -36,12 +36,6 @@
           tooltipPosition="right"
           (click)="openSearchDialog()"
         ></button>
-        @if (nearbyItems().length > 0) {
-          <div class="items-count">
-            <span class="count-number">{{ nearbyItems().length }}</span>
-            <span class="count-label">artículos</span>
-          </div>
-        }
       }
     </nav>
   </aside>

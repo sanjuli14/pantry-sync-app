@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ItemsService } from '../../../core/services';
 import { Item } from '../../../core/models';
 import {
@@ -35,6 +35,7 @@ import { MessageService } from 'primeng/api';
 export class ItemsListComponent implements OnInit {
   private itemsService = inject(ItemsService);
   private messageService = inject(MessageService);
+  public cdr = inject(ChangeDetectorRef);
 
   detailDialog: ItemDetailDialogComponent | null = null;
   confirmDialog: ConfirmDialogComponent | null = null;
@@ -72,6 +73,7 @@ export class ItemsListComponent implements OnInit {
       console.error('Error loading items:', err);
     } finally {
       this.loading.set(false);
+      this.cdr.detectChanges();
     }
   }
 

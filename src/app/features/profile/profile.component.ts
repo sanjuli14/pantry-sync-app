@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit, viewChild } from '@angular/core';
+import { Component, inject, signal, OnInit, viewChild, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, ItemsService } from '../../core/services';
 import { Item } from '../../core/models';
@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   authService = inject(AuthService);
   private itemsService = inject(ItemsService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   openDetails = viewChild.required<ItemDetailDialogComponent>('detailsDialog');
 
@@ -38,6 +39,7 @@ export class ProfileComponent implements OnInit {
       console.error('Error loading items:', err);
     } finally {
       this.loading.set(false);
+      this.cdr.detectChanges();
     }
   }
 
