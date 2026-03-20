@@ -4,6 +4,8 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SliderModule } from 'primeng/slider';
 import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 import { GeolocationService } from '../../../core/services';
 
 export interface SearchParams {
@@ -15,7 +17,15 @@ export interface SearchParams {
 @Component({
   selector: 'app-search-dialog',
   standalone: true,
-  imports: [DialogModule, InputNumberModule, SliderModule, ButtonModule, FormsModule],
+  imports: [
+    DialogModule,
+    InputNumberModule,
+    SliderModule,
+    ButtonModule,
+    FormsModule,
+    MessageModule,
+  ],
+  providers: [MessageService],
   template: `
     <p-dialog
       header="Buscar artículos"
@@ -133,6 +143,7 @@ export interface SearchParams {
 })
 export class SearchDialogComponent {
   private geolocationService = inject(GeolocationService);
+  private messageService = inject(MessageService);
 
   visible = false;
   lat = 40.7128;
@@ -169,8 +180,13 @@ export class SearchDialogComponent {
         this.lng = pos.lng;
         this.gettingLocation.set(false);
       })
-      .catch(() => {
+      .catch((err) => {
         this.gettingLocation.set(false);
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Ubicación no disponible',
+          detail: err.message || 'No se pudo obtener tu ubicación.',
+        });
       });
   }
 

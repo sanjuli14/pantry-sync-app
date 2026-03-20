@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { IpLocationService } from './ip-location.service';
 
 interface GeoPosition {
   lat: number;
@@ -7,10 +8,12 @@ interface GeoPosition {
 
 @Injectable({ providedIn: 'root' })
 export class GeolocationService {
+  private ipLocationService = inject(IpLocationService);
+
   async getCurrentPosition(): Promise<GeoPosition> {
     return new Promise((resolve, reject) => {
       if (!('geolocation' in navigator)) {
-        reject(new Error('Geolocation not supported'));
+        this.tryIpFallback(resolve, reject);
         return;
       }
 
@@ -22,7 +25,7 @@ export class GeolocationService {
           });
         },
         (error) => {
-          reject(error);
+          this.tryIpFallback(resolve, reject);
         },
         {
           enableHighAccuracy: true,
@@ -31,5 +34,12 @@ export class GeolocationService {
         },
       );
     });
+  }
+
+  private tryIpFallback(
+    resolve: (value: GeoPosition) => void,
+    reject: (reason?: any) => void,
+  ): void {
+    this.ipLocationService.getLocation().then(resolve).catch(reject);
   }
 }
