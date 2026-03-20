@@ -1,0 +1,46 @@
+<div class="auth-container">
+  <p-card header="Crear Cuenta" styleClass="auth-card">
+    @if (error()) {
+      <p-message severity="error" [text]="error()!" />
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="alias">Nombre de usuario</label>
+        <input pInputText id="alias" formControlName="alias" placeholder="Tu nombre de usuario" />
+        @if (form.get('alias')?.invalid && form.get('alias')?.touched) {
+          <small class="p-error">Mínimo 3 caracteres, máximo 30</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="phone">Teléfono</label>
+        <input pInputText id="phone" formControlName="phone" placeholder="+1234567890" />
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <small class="p-error">Teléfono inválido (8-20 caracteres)</small>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="password">Contraseña</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="true"
+          [toggleMask]="true"
+          placeholder="Mínimo 4 caracteres"
+        />
+        @if (form.get('password')?.invalid && form.get('password')?.touched) {
+          <small class="p-error">Mínimo 4 caracteres</small>
+        }
+      </div>
+
+      <p-button type="submit" label="Registrarse" [loading]="loading()" styleClass="w-full" />
+    </form>
+
+    <div class="auth-footer">
+      <span>¿Ya tienes cuenta?</span>
+      <a routerLink="/auth/login">Inicia sesión</a>
+    </div>
+  </p-card>
+</div>

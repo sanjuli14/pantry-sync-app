@@ -1,0 +1,162 @@
+<app-header />
+<p-toast />
+
+<main class="container">
+  <p-card header="Publicar Artículo" styleClass="create-card">
+    <div class="create-layout">
+      <div class="form-section">
+        @if (error()) {
+          <p-message severity="error" [text]="error()!" />
+        }
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="title">Título del artículo</label>
+              <input
+                pInputText
+                id="title"
+                formControlName="title"
+                placeholder="Ej: Manzanas frescas"
+              />
+              @if (form.get('title')?.invalid && form.get('title')?.touched) {
+                <small class="p-error">El título es requerido</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="category">Categoría</label>
+              <p-select
+                id="category"
+                formControlName="category"
+                [options]="categories"
+                placeholder="Selecciona una categoría"
+              />
+              @if (form.get('category')?.invalid && form.get('category')?.touched) {
+                <small class="p-error">La categoría es requerida</small>
+              }
+            </div>
+
+            <div class="form-field full-width">
+              <label for="description">Descripción</label>
+              <textarea
+                pTextarea
+                id="description"
+                formControlName="description"
+                rows="3"
+                placeholder="Describe el artículo..."
+              ></textarea>
+            </div>
+
+            <div class="form-field">
+              <label for="zone">Zona</label>
+              <input pInputText id="zone" formControlName="zone" placeholder="Ej: Centro" />
+              @if (form.get('zone')?.invalid && form.get('zone')?.touched) {
+                <small class="p-error">La zona es requerida</small>
+              }
+            </div>
+
+            <div class="form-field">
+              <label for="contact">Contacto</label>
+              <input
+                pInputText
+                id="contact"
+                formControlName="contact"
+                placeholder="Teléfono o forma de contacto"
+              />
+            </div>
+
+            <div class="form-field full-width">
+              <label>Imagen del artículo</label>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="fileInput"
+                  (change)="onFileSelected($event)"
+                  hidden
+                />
+                <label for="fileInput" class="upload-label">
+                  <i class="pi pi-cloud-upload"></i>
+                  <span>{{ selectedFile?.name || 'Seleccionar imagen' }}</span>
+                </label>
+                @if (selectedFile) {
+                  <button type="button" class="clear-btn" (click)="selectedFile = null">
+                    <i class="pi pi-times"></i>
+                  </button>
+                }
+              </div>
+              <small class="file-hint">JPG, PNG o WebP. Máximo 5MB</small>
+            </div>
+          </div>
+
+          <div class="location-section">
+            <div class="location-header">
+              <h3>
+                <i class="pi pi-map-marker"></i>
+                Ubicación
+              </h3>
+              <p-button
+                label="Usar mi ubicación"
+                icon="pi pi-compass"
+                [outlined]="true"
+                [loading]="useCurrentLocation()"
+                (onClick)="useMyLocation()"
+                size="small"
+              />
+            </div>
+
+            <div class="coordinates-grid">
+              <div class="form-field">
+                <label for="latitude">Latitud</label>
+                <p-inputNumber
+                  id="latitude"
+                  formControlName="latitude"
+                  [minFractionDigits]="6"
+                  [maxFractionDigits]="6"
+                  [min]="-90"
+                  [max]="90"
+                />
+              </div>
+              <div class="form-field">
+                <label for="longitude">Longitud</label>
+                <p-inputNumber
+                  id="longitude"
+                  formControlName="longitude"
+                  [minFractionDigits]="6"
+                  [maxFractionDigits]="6"
+                  [min]="-180"
+                  [max]="180"
+                />
+              </div>
+            </div>
+
+            <div class="map-preview">
+              <app-map
+                [center]="{
+                  lat: form.get('latitude')?.value || 40.7128,
+                  lng: form.get('longitude')?.value || -74.006,
+                }"
+                [items]="[]"
+                [enableClick]="true"
+                (locationSelected)="onLocationSelected($event)"
+              />
+            </div>
+            <small class="map-hint">Haz clic en el mapa para seleccionar la ubicación exacta</small>
+          </div>
+
+          <div class="form-actions">
+            <p-button type="button" label="Cancelar" [outlined]="true" (onClick)="goBack()" />
+            <p-button
+              type="submit"
+              label="Publicar artículo"
+              icon="pi pi-check"
+              [loading]="loading()"
+              styleClass="publish-btn"
+            />
+          </div>
+        </form>
+      </div>
+    </div>
+  </p-card>
+</main>

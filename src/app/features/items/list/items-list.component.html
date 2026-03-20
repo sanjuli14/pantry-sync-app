@@ -1,0 +1,107 @@
+<app-header />
+<p-toast />
+
+<main class="container">
+  <div class="header-section">
+    <h1>
+      <i class="pi pi-box"></i>
+      Artículos
+    </h1>
+    <p-button
+      label="Volver al mapa"
+      icon="pi pi-map-marker"
+      [outlined]="true"
+      (onClick)="goToMap()"
+    />
+  </div>
+
+  <p-tabs [(value)]="activeTab" styleClass="items-tabs">
+    <p-tablist>
+      <p-tab value="0">
+        <i class="pi pi-list"></i>
+        Todos los artículos
+        <span class="tab-badge">{{ allItems().length }}</span>
+      </p-tab>
+      <p-tab value="1">
+        <i class="pi pi-user"></i>
+        Mis artículos
+        <span class="tab-badge">{{ myItems().length }}</span>
+      </p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        @if (loading()) {
+          <div class="loading-state">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Cargando artículos...</span>
+          </div>
+        } @else if (allItems().length > 0) {
+          <div class="items-grid">
+            @for (item of allItems(); track item.id) {
+              <div class="item-wrapper">
+                <app-item-card [item]="item" (viewDetails)="onViewDetails($event)" />
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-icon">📦</span>
+            <h3>No hay artículos disponibles</h3>
+            <p>Sé el primero en publicar un artículo</p>
+          </div>
+        }
+      </p-tabpanel>
+
+      <p-tabpanel value="1">
+        @if (loading()) {
+          <div class="loading-state">
+            <i class="pi pi-spin pi-spinner"></i>
+            <span>Cargando artículos...</span>
+          </div>
+        } @else if (myItems().length > 0) {
+          <div class="items-grid">
+            @for (item of myItems(); track item.id) {
+              <div class="item-wrapper">
+                <app-item-card [item]="item" (viewDetails)="onViewDetails($event)" />
+                <div class="item-actions">
+                  <p-button
+                    icon="pi pi-eye"
+                    pTooltip="Ver detalles"
+                    tooltipPosition="top"
+                    [text]="true"
+                    (onClick)="onViewDetails(item)"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    pTooltip="Eliminar"
+                    tooltipPosition="top"
+                    [text]="true"
+                    severity="danger"
+                    [loading]="deletingId() === item.id"
+                    (onClick)="onDeleteItem(item)"
+                  />
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <span class="empty-icon">📦</span>
+            <h3>No tienes artículos publicados</h3>
+            <p>Publica tu primer artículo desde el mapa</p>
+            <p-button
+              label="Ir al mapa"
+              icon="pi pi-map-marker"
+              [outlined]="true"
+              (onClick)="goToMap()"
+            />
+          </div>
+        }
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</main>
+
+<app-item-detail-dialog (ready)="setDetailDialog($event)" (onClose)="goToMap()" />
+
+<app-confirm-dialog (ready)="setConfirmDialog($event)" (onConfirm)="onConfirmDelete()" />

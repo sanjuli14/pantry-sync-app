@@ -1,0 +1,83 @@
+<p-dialog
+  header="Mi Perfil"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width: '600px', maxHeight: '90vh' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="profile-content">
+    <div class="profile-header">
+      <div class="avatar">
+        {{ authService.user()?.alias?.charAt(0)?.toUpperCase() ?? '' }}
+      </div>
+      <div class="user-info">
+        <h2>{{ authService.user()?.alias }}</h2>
+        <p class="user-meta">
+          <i class="pi pi-calendar"></i>
+          Miembro desde {{ authService.user()?.created_at | date: 'fullDate' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="profile-details">
+      <div class="detail-card">
+        <div class="detail-icon">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="detail-info">
+          <label>Nombre de usuario</label>
+          <span>{{ authService.user()?.alias }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="detail-icon">
+          <i class="pi pi-phone"></i>
+        </div>
+        <div class="detail-info">
+          <label>Teléfono</label>
+          <span>{{ authService.user()?.phone || 'No proporcionado' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stat-card highlight">
+        <span class="stat-value">{{ myItems().length }}</span>
+        <span class="stat-label">Artículos publicados</span>
+      </div>
+    </div>
+
+    <div class="items-section">
+      <h3>
+        <i class="pi pi-box"></i>
+        Mis artículos
+      </h3>
+
+      @if (loading()) {
+        <div class="loading-state">
+          <i class="pi pi-spin pi-spinner"></i>
+          <span>Cargando...</span>
+        </div>
+      } @else if (myItems().length > 0) {
+        <div class="items-grid">
+          @for (item of myItems(); track item.id) {
+            <app-item-card [item]="item" (click)="onViewItem(item)" />
+          }
+        </div>
+      } @else {
+        <div class="empty-items">
+          <span class="empty-icon">📦</span>
+          <p>No tienes artículos publicados</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-sign-out" severity="danger" [outlined]="true" (onClick)="logout()" />
+    <p-button icon="pi pi-map-marker" (onClick)="goToMap()" />
+  </ng-template>
+</p-dialog>

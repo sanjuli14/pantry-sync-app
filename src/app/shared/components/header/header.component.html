@@ -1,0 +1,34 @@
+<header class="header">
+  <div class="header-content">
+    <a routerLink="/" class="logo">
+      <span class="logo-icon">🥫</span>
+      <span class="logo-text">PantrySync</span>
+    </a>
+
+    @if (authService.isAuthenticated()) {
+      <nav class="nav">
+        <a routerLink="/" pButton pRipple label="Inicio" [text]="true"></a>
+        <a routerLink="/items" pButton pRipple label="Artículos" [text]="true"></a>
+        <a routerLink="/items/create" pButton pRipple label="Publicar" [outlined]="true"></a>
+        <p-button
+          [label]="'Hola, ' + authService.user()?.alias"
+          [text]="true"
+          [routerLink]="['/profile']"
+          icon="pi pi-user"
+        />
+        <p-button
+          label="Cerrar sesión"
+          [text]="true"
+          severity="danger"
+          (onClick)="authService.logout()"
+          icon="pi pi-sign-out"
+        />
+      </nav>
+    } @else {
+      <nav class="nav">
+        <a routerLink="/auth/login" pButton pRipple label="Iniciar sesión" [text]="true"></a>
+        <a routerLink="/auth/register" pButton pRipple label="Registrarse" [outlined]="true"></a>
+      </nav>
+    }
+  </div>
+</header>

@@ -1,0 +1,61 @@
+<p-card styleClass="item-card" [style]="{ overflow: 'hidden' }">
+  <ng-template pTemplate="header">
+    <div class="item-image-container">
+      @if (hasImage()) {
+        <img [src]="getImageUrl()" [alt]="item().title" class="item-image" />
+      } @else {
+        <div class="item-image-placeholder">
+          <span class="category-emoji">{{ getCategoryEmoji() }}</span>
+        </div>
+      }
+      <div class="category-badge">
+        <p-tag [value]="item().category" severity="secondary" />
+      </div>
+      <div class="urgency-indicator" [class]="getUrgencyClass()">
+        <span>{{ getExpiresText() }}</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="item-content">
+    <h3 class="item-title">{{ item().title }}</h3>
+    <p class="item-description">{{ item().description }}</p>
+
+    <div class="item-meta">
+      <div class="meta-item">
+        <i class="pi pi-map-marker"></i>
+        <span>{{ item().zone }}</span>
+      </div>
+      @if (item().contact) {
+        <div class="meta-item">
+          <i class="pi pi-phone"></i>
+          <span>{{ item().contact }}</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    @if (showActions()) {
+      <div class="card-actions">
+        <p-button
+          label="Ver detalles"
+          icon="pi pi-eye"
+          severity="info"
+          (onClick)="viewDetails.emit(item())"
+          styleClass="action-btn"
+        />
+        @if (isOwner()) {
+          <p-button
+            label="Eliminar"
+            icon="pi pi-trash"
+            severity="danger"
+            [outlined]="true"
+            (onClick)="deleteItem.emit(item())"
+            styleClass="action-btn"
+          />
+        }
+      </div>
+    }
+  </ng-template>
+</p-card>

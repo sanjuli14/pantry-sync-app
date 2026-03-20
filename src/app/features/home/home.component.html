@@ -1,0 +1,64 @@
+<div class="fullscreen-map">
+  <app-map
+    #map
+    [center]="{ lat: lat, lng: lng }"
+    [items]="getItemMarkers()"
+    [radius]="radius"
+    [enableClick]="true"
+    [label]="getNameMarkes()"
+    (locationSelected)="onLocationSelected($event)"
+  />
+
+  <aside class="floating-controls">
+    <nav class="controls-nav">
+      @if (isAuthenticated()) {
+        <button
+          pButton
+          class="control-btn"
+          icon="pi pi-plus"
+          [pTooltip]="'Publicar artículo'"
+          tooltipPosition="right"
+          (click)="openCreateDialog()"
+        ></button>
+        <button
+          pButton
+          class="control-btn"
+          icon="pi pi-user"
+          [pTooltip]="'Mi perfil'"
+          tooltipPosition="right"
+          (click)="openProfileDialog()"
+        ></button>
+        <button
+          pButton
+          class="control-btn search-btn"
+          icon="pi pi-search"
+          [pTooltip]="'Buscar en otra ubicación'"
+          tooltipPosition="right"
+          (click)="openSearchDialog()"
+        ></button>
+        @if (nearbyItems().length > 0) {
+          <div class="items-count">
+            <span class="count-number">{{ nearbyItems().length }}</span>
+            <span class="count-label">artículos</span>
+          </div>
+        }
+      }
+    </nav>
+  </aside>
+
+  <div class="location-hint" [class.visible]="!selectedLocation()">
+    <i class="pi pi-map-marker"></i>
+    <span>Haz clic en el mapa para seleccionar ubicación o publicar</span>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-overlay">
+      <i class="pi pi-spin pi-spinner"></i>
+      <span>Buscando artículos...</span>
+    </div>
+  }
+</div>
+
+<app-search-dialog #searchDialog (search)="onSearch($event)" />
+<app-create-item-dialog #createDialog (created)="onItemCreated()" />
+<app-profile-dialog #profileDialog />

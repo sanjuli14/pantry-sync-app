@@ -1,0 +1,45 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  input,
+  :host ::ng-deep .p-inputtext {
+    width: 100%;
+  }
+
+  :host ::ng-deep .p-password {
+    width: 100%;
+  }
+}
+
+.auth-footer {
+  margin-top: 1rem;
+  text-align: center;
+
+  a {
+    font-weight: 500;
+    margin-left: 0.25rem;
+  }
+}
+
+:host ::ng-deep .w-full {
+  width: 100%;
+}

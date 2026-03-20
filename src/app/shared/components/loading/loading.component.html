@@ -1,0 +1,6 @@
+<div class="loading-container" [class.fullscreen]="fullscreen()">
+  <p-progressSpinner />
+  @if (message()) {
+    <p class="loading-message">{{ message() }}</p>
+  }
+</div>
